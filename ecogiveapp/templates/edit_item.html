@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Item - EcoGive{% endblock %}
+
+{% block content %}
+    <div class="card p-4 mx-auto" style="max-width: 500px;">
+        <h2 class="text-center mb-4">Edit Item</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="title" class="form-label">Title:</label>
+                <input type="text" name="title" id="title" value="{{ item.title }}" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description:</label>
+                <textarea name="description" id="description" class="form-control" required>{{ item.description }}</textarea>
+            </div>
+            <div class="mb-3">
+                <label for="quantity" class="form-label">Quantity:</label>
+                <input type="number" name="quantity" id="quantity" value="{{ item.quantity }}" class="form-control" min="1" required>
+            </div>
+            <div class="mb-3">
+                <label for="image" class="form-label">Image:</label>
+                {% if item.image %}
+                    <div class="mb-3">
+                        <img src="{{ item.image.url }}" alt="{{ item.title }}" style="width: 200px; height: auto;">
+                    </div>
+                {% endif %}
+                <input type="file" name="image" id="image" class="form-control" accept="image/*">
+            </div>
+            <button type="submit" class="btn btn-primary w-100">Save Changes</button>
+        </form>
+    </div>
+{% endblock %}

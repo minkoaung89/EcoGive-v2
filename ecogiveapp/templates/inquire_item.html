@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Inquire About {{ item.title }} | EcoGive{% endblock %}
+
+{% block content %}
+    <div class="container my-4">
+        <h1 class="mb-4">Inquire About {{ item.title }}</h1>
+
+        <p><strong>Title:</strong> {{ item.title }}</p>
+        <p><strong>Description:</strong> {{ item.description }}</p>
+        <p><strong>Quantity:</strong> {{ item.quantity }}</p>
+
+        <form method="post" action="">
+            {% csrf_token %}
+
+            <div class="mb-3">
+                <label for="email" class="form-label">Your Email:</label>
+                <input type="email" class="form-control" name="email" id="email" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="message" class="form-label">Your Inquiry Message:</label>
+                <textarea class="form-control" name="message" id="message" rows="4" required></textarea>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Send Inquiry</button>
+        </form>
+
+        <div class="mt-4">
+            <a href="{% url 'item_list' %}" class="btn btn-secondary">Back to Items List</a>
+        </div>
+    </div>
+{% endblock %}

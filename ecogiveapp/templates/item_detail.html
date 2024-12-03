@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ item.title }} - EcoGive{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="card mx-auto" style="max-width: 600px;">
+            {% if item.image %}
+                <img src="{{ item.image.url }}" class="card-img-top" alt="{{ item.title }}">
+            {% endif %}
+            <div class="card-body">
+                <h3 class="card-title">{{ item.title }}</h3>
+                <p class="card-text"><strong>Description:</strong> {{ item.description }}</p>
+                <p class="card-text"><strong>Quantity:</strong> {{ item.quantity }}</p>
+                <a href="{% url 'inquire_item' item.id %}" class="btn btn-primary">Inquire about this item</a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
