@@ -1,17 +1,28 @@
+"""
+Views for the EcoGive application.
+This module contains views for handling user registration, login, logout,
+as well as item management (adding, editing, deleting), user dashboard, item inquiries.
+"""
+from smtplib import SMTPException
+from django.core.mail import EmailMessage
+from django.core.mail import BadHeaderError
 from django.contrib.auth import authenticate, login, logout
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
-from django.contrib.auth.models import User
+#from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ValidationError  
+from django.core.exceptions import ValidationError
 from django.contrib.auth.password_validation import validate_password
-from django.core.mail import send_mail, EmailMessage
 from django.conf import settings
+from django.db import IntegrityError
 from .models import Item
 from .forms import RegistrationForm
 
 #For User Registration
 def register(request):
+    """
+    This is user registeration function with validation for all inputs. 
+    """
     if request.method == 'POST':
         form = RegistrationForm(request.POST)   #Use the custom registrationform from forms.spy
         if form.is_valid():
@@ -45,25 +56,34 @@ def register(request):
 
 #For User login
 def user_login(request):
+    """
+    This is user login function and will redirect to user dashboard after successful login.
+    """
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
         if user:
             login(request, user)
-            return redirect('dashboard')  #Redirect to the user dashboard after login
-        else:
-            messages.error(request, "Invalid credentials.")
+            return redirect('dashboard')  # Redirect to the user dashboard after login
+
+        messages.error(request, "Invalid credentials.")
+
     return render(request, 'login.html')
 
 #For User logout
 def user_logout(request):
+    """
+    This is user logout function.
+    """
     logout(request)
     return redirect('login')
 
-#For adding an item
-@login_required #User need to login first to add new item
+@login_required  #User needs to login first to add a new item
 def add_item(request):
+    """
+    This is add item function after user login, to start listing items.
+    """
     if request.method == 'POST':
         title = request.POST['title']
         description = request.POST['description']
@@ -75,7 +95,15 @@ def add_item(request):
             return render(request, 'add_item.html')
 
         try:
-            item = Item.objects.create( #Create and save the new item
+            #Validate quantity is a positive integer
+            quantity = int(quantity)
+            if quantity <= 0:
+                raise ValueError("Quantity must be a positive integer.")
+
+            #The variable 'item' is not explicitly used after being created
+            # but it is needed to add the item to the database. Therefore, the 'item' variable
+            # might seem no-member and unused to pylint and it is false positive.
+            item = Item.objects.create( #pylint: disable=no-member, unused-variable
                 title=title,
                 description=description,
                 quantity=quantity,
@@ -84,14 +112,23 @@ def add_item(request):
             )
             messages.success(request, 'Item added successfully!')
             return redirect('dashboard')
-        except Exception as e:  #Handle exceptions while adding an item
-            messages.error(request, f'Error adding item: {e}')
-    
+
+        #Handle specific exceptions
+        except IntegrityError as e:
+            messages.error(request, f'Error adding item due to integrity issue: {e}')
+        except ValueError as e:
+            messages.error(request, f'Invalid data provided: {e}')
+        except ValidationError as e:
+            messages.error(request, f'Validation error: {e}')
+
     return render(request, 'add_item.html')
 
 #For Editing an Item
 @login_required #Only authenticated users to edit their existing item
 def edit_item(request, item_id):
+    """
+    This is edit function of listed item.
+    """
     item = get_object_or_404(Item, id=item_id, owner=request.user)
     if request.method == 'POST':
         item.title = request.POST['title']
@@ -106,17 +143,20 @@ def edit_item(request, item_id):
             item.image = request.FILES['image']
 
         item.save()
-        
+
         #Add a success message and redirect to avoid form resubmission
         messages.success(request, 'Item updated successfully!')
         return redirect('dashboard')
-    
+
     return render(request, 'edit_item.html', {'item': item})
 
 
 #For Deleting an Item
 @login_required
 def delete_item(request, item_id):
+    """
+    This is delete function when owner delete the item.
+    """
     item = get_object_or_404(Item, id=item_id, owner=request.user)
     if request.method == 'POST':
         #Delete the image from S3 before deleting the item
@@ -125,24 +165,28 @@ def delete_item(request, item_id):
         item.delete()
         messages.success(request, 'Item deleted successfully!')
         return redirect('dashboard')
-    
+
     return render(request, 'delete_item.html', {'item': item})
-    
+
 #For item inquiry
 def inquire_item(request, item_id):
+    """
+    This is for inquiry function while user wants to ask something to item owner
+    about the listed item on EcoGive site.
+    """
     item = get_object_or_404(Item, id=item_id)
     if request.method == 'POST':
-        email = request.POST.get('email').strip()  # Get the user's email from the form
+        email = request.POST.get('email').strip()  #Get the user's email from the form
         message = request.POST.get('message').strip()
 
         #Check if email is valid
         if not email:
             messages.error(request, "Email is required to send an inquiry.")
             return render(request, 'inquire_item.html', {'item': item})
-        
+
         #Prepare the email message content
         inquiry_message = f"""
-        You have new inquiry as below.
+        You have a new inquiry as below:
         
         Message:
         {message}
@@ -153,23 +197,34 @@ def inquire_item(request, item_id):
             email_message = EmailMessage(
                 subject=f'Inquiry about {item.title}',
                 body=inquiry_message,
-                from_email=settings.DEFAULT_FROM_EMAIL,  #Use the default sender email from settings.py
+                #Use the default sender email from settings.py
+                from_email=settings.DEFAULT_FROM_EMAIL,
                 to=[item.owner.email],  #Send to item owner
                 reply_to=[email],  #Set reply-to to the user's email
             )
             email_message.send(fail_silently=False)
 
             messages.success(request, 'Inquiry sent successfully.')
-        except Exception as e:
-            #detailed error message for debugging
-            print("Error while sending email:", e)
-            messages.error(request, f'Error sending inquiry: {e}')
+
+        #handling the possible exceptions
+        except BadHeaderError as e:
+            messages.error(request, f'Invalid header found: {e}')
+        except SMTPException as e:
+            messages.error(request, f'Failed to send email: {e}')
+        except ValueError as e:
+            messages.error(request, f'Invalid email address: {e}')
+        except ConnectionError as e:
+            messages.error(request, f'Failed to connect to the email server: {e}')
+
         return redirect('item_list')
 
     return render(request, 'inquire_item.html', {'item': item})
 
 #For home page view
 def home(request):
+    """
+    This is home page view with search query function for filtered view
+    """
     query = request.GET.get('query', '')
     if query:   #filtered items based on a search query
         items = Item.objects.filter(title__icontains=query).order_by('-posted_at')
@@ -180,13 +235,17 @@ def home(request):
 
 #For item list view
 def item_list(request):
-    #Check if query parameter "all=true" is set to show all items
+    """
+    Check if query parameter "all=true" is set to show all items and 
+    display for public users view and logged-in user view.
+    """
     all_items = request.GET.get('all', 'false').lower() == 'true'
 
     if all_items or not request.user.is_authenticated:
         items = Item.objects.all().order_by('-posted_at')  #Show all items for public users
     else:
-        items = Item.objects.filter(owner=request.user).order_by('-posted_at')  #Show only the logged-in user's items
+        #Show only the logged-in user's items
+        items = Item.objects.filter(owner=request.user).order_by('-posted_at')
 
     return render(request, 'item_list.html', {'items': items})
 
@@ -194,10 +253,16 @@ def item_list(request):
 #Dashboard for registered users
 @login_required
 def dashboard(request):
-    user_items = Item.objects.filter(owner=request.user).order_by('-posted_at')  #Show only items owned by logged-in user
+    """
+    Display the user's dashboard with a list of items owned by the user.
+    """
+    user_items = Item.objects.filter(owner=request.user).order_by('-posted_at')
     return render(request, 'dashboard.html', {'items': user_items})
-    
+
 #View Item Detail Displays for an individual item
 def view_item_detail(request, item_id):
+    """
+    Display detailed information for a specific item.
+    """
     item = get_object_or_404(Item, id=item_id)
     return render(request, 'item_detail.html', {'item': item})

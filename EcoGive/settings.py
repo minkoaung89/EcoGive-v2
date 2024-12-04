@@ -9,6 +9,8 @@ https://docs.djangoproject.com/en/4.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
+#All import should start from beginning
+import os
 
 from pathlib import Path
 
@@ -136,13 +138,12 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-#For Static images and other media 
+#For Static images and other media
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media/'
 
 
 #For the .env variables setup
-import os
 #from dotenv import load_dotenv
 #from pathlib import Path
 

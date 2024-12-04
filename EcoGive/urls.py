@@ -28,10 +28,16 @@ urlpatterns = [
     path('login/', views.user_login, name='login'),      #for Login view
     path('logout/', views.user_logout, name='logout'),   #for Logout view
     path('items/', views.item_list, name='item_list'),   #for Item listing view
-    path('items/<int:item_id>/', views.view_item_detail, name='view_item_detail'),  # View Item Detail
+    path(
+        'items/<int:item_id>/', 
+        views.view_item_detail, name='view_item_detail'),  # View Item Detail
     path('items/add/', views.add_item, name='add_item'), #for Add item view
-    path('items/<int:item_id>/inquire/', views.inquire_item, name='inquire_item'), #for Inquiry view
+    path(
+        'items/<int:item_id>/inquire/', 
+        views.inquire_item, name='inquire_item'), #for Inquiry view
     path('dashboard/', views.dashboard, name='dashboard'),  #for User Dashboard view
     path('items/<int:item_id>/edit/', views.edit_item, name='edit_item'),  #for Edit item view
-    path('items/<int:item_id>/delete/', views.delete_item, name='delete_item'),  #for Delete item view
+    path(
+        'items/<int:item_id>/delete/', 
+        views.delete_item, name='delete_item'),  #for Delete item view
 ]

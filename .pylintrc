@@ -1,0 +1,14 @@
+[MESSAGES CONTROL]
+disable=invalid-name, too-few-public-methods, no-member
+
+#Reason of disabling on specific messages
+#Disabling 'invalid-name' because the project structure uses CamelCase for module names (e.g., EcoGive), 
+#which does not conform to snake_case naming style, but is retained for branding purposes.
+
+#Disabling 'too-few-public-methods' because certain classes, such as Django Meta classes in the forms.py
+# are designed to contain minimal attributes and methods. The Meta class in Django forms is a standard convention 
+# and does not need additional methods.
+
+#The pylint error Class 'Item' has no 'objects' member (no-member) in views.py typically occurs when pylint does not recognize that 
+# Item is a Django model and has the objects manager. This is a false positive, especially common when working with 
+# dynamically assigned class members like those in Django models.
