@@ -22,6 +22,8 @@ phases:
       #Set Java 17 as the default Java version
       - export JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto
       - export PATH=$JAVA_HOME/bin:$PATH
+      # Verify Java version
+      - java -version
       #Install sonar-scanner
       - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
       - unzip sonar-scanner-cli-4.6.2.2472-linux.zip
@@ -43,6 +45,7 @@ phases:
   post_build:
     commands:
       - echo "Starting post-build phase..."
+      #Run SonarScanner using Java 17
       - sonar-scanner -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.organization=$SONAR_ORGANIZATION -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_LOGIN
       #Verify SonarCloud quality gate status
       - sleep 5
