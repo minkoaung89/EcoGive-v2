@@ -48,17 +48,25 @@ phases:
   post_build:
     commands:
       - echo "Starting post-build phase..."
-      #Re-export JAVA_HOME and PATH
+      #Set JAVA_HOME and PATH explicitly
       - export JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto
       - export PATH=$JAVA_HOME/bin:$PATH:$(pwd)/sonar-scanner-4.6.2.2472-linux/bin
+      #Print out the environment to confirm Java is in the path
+      - echo "JAVA_HOME is set to $JAVA_HOME"
+      - java -version
+      #Check if SonarScanner is available in the PATH
+      - sonar-scanner -h || echo "SonarScanner command not found in PATH"
       #Run SonarScanner
-      - sonar-scanner -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.organization=$SONAR_ORGANIZATION -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_LOGIN
-      #Verify SonarCloud quality gate status
+      - JAVA_HOME=$JAVA_HOME PATH=$JAVA_HOME/bin:$PATH sonar-scanner -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.organization=$SONAR_ORGANIZATION -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_LOGIN
+      # Verify SonarCloud quality gate status
       - sleep 5
       - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=$SONAR_PROJECT_KEY > result.json
       - cat result.json
-      - if [ $(jq -r '.projectStatus.status' result.json) = ERROR ]; then exit 1; fi
-      - echo "SonarCloud analysis completed."
+      - if [ $(jq -r '.projectStatus.status' result.json) = "ERROR" ]; then
+          echo "SonarCloud Quality Gate failed!";
+          exit 2;
+        fi
+      - echo "SonarCloud analysis completed successfully."
 
 artifacts:
   files:
