@@ -12,8 +12,9 @@ phases:
     commands:
       - echo "Starting pre-build phase..."
       - python --version
-      - echo "Running pylint"
+      - echo "Running pylint on all python files of the project"
       - pylint $CODEBUILD_SRC_DIR/*.py
+      - pylint $CODEBUILD_SRC_DIR/**/*.py
   build:
     commands:
       - echo "Starting build phase..."
