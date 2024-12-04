@@ -11,15 +11,17 @@ phases:
     runtime-versions:
       python: 3.9
     commands:
+      - echo "Starting installation phase..."
       - pip install --upgrade pip
       - pip install -r requirements.txt
       #Install dependencies needed for running the static analysis
       - pip install pylint
-      #Install Java for sonar-scanner, and download sonar-scanner
-      - echo "Starting installation phase..."
-      #Update and install Java, wget, and unzip
+      #Update and install Java, wget, and unzip, and download sonar-scanner
       - yum update -y
-      - yum install -y java-11-openjdk wget unzip
+      - yum install -y java-17-amazon-corretto wget unzip
+      #Set Java 17 as the default Java version
+      - export JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto
+      - export PATH=$JAVA_HOME/bin:$PATH
       #Install sonar-scanner
       - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
       - unzip sonar-scanner-cli-4.6.2.2472-linux.zip
