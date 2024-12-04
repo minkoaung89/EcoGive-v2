@@ -1,4 +1,11 @@
 version: 0.2
+env:
+  secrets-manager:
+    SONAR_LOGIN: prod/x23340355/EcoGive:sonartoken
+    SONAR_HOST_URL: prod/x23340355/EcoGive:HOST
+    SONAR_ORGANIZATION: prod/x23340355/EcoGive:Organization
+    SONAR_PROJECT_KEY: prod/x23340355/EcoGive:Project
+    
 phases:
   install:
     runtime-versions:
@@ -8,6 +15,12 @@ phases:
       - pip install -r requirements.txt
       # Install dependencies needed for running the static analysis
       - pip install pylint
+      # Install Java for sonar-scanner, and download sonar-scanner
+      - apt-get update && apt-get install -y openjdk-11-jdk wget unzip
+      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
+      - unzip ./sonar-scanner-cli-4.6.2.2472-linux.zip
+      - export PATH=$PATH:$(pwd)/sonar-scanner-4.6.2.2472-linux/bin
+      
   pre_build:
     commands:
       - echo "Starting pre-build phase..."
@@ -15,6 +28,7 @@ phases:
       - echo "Running pylint on all python files of the project"
       - pylint $CODEBUILD_SRC_DIR/*.py
       - pylint $CODEBUILD_SRC_DIR/**/*.py
+      
   build:
     commands:
       - echo "Starting build phase..."
@@ -22,7 +36,18 @@ phases:
       - python manage.py migrate
   post_build:
     commands:
-      - echo "Build complete."
+      - echo "Starting post-build phase..."
+      - sonar-scanner \
+          -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+          -Dsonar.organization=$SONAR_ORGANIZATION \
+          -Dsonar.host.url=$SONAR_HOST_URL \
+          -Dsonar.login=$SONAR_LOGIN
+      #Verify SonarCloud quality gate status
+      - sleep 5
+      - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=$SONAR_PROJECT_KEY > result.json
+      - cat result.json
+      - if [ $(jq -r '.projectStatus.status' result.json) = ERROR ]; then exit 1; fi
+      - echo "SonarCloud analysis completed."
 
 artifacts:
   files:
