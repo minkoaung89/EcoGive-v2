@@ -41,11 +41,7 @@ phases:
   post_build:
     commands:
       - echo "Starting post-build phase..."
-      - sonar-scanner \
-          -Dsonar.projectKey=$SONAR_PROJECT_KEY \
-          -Dsonar.organization=$SONAR_ORGANIZATION \
-          -Dsonar.host.url=$SONAR_HOST_URL \
-          -Dsonar.login=$SONAR_LOGIN
+      - sonar-scanner -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.organization=$SONAR_ORGANIZATION -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_LOGIN
       #Verify SonarCloud quality gate status
       - sleep 5
       - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=$SONAR_PROJECT_KEY > result.json
