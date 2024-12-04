@@ -16,21 +16,15 @@ phases:
       - pip install -r requirements.txt
       #Install dependencies needed for running the static analysis
       - pip install pylint
-      #Update and install Java, wget, and unzip
-      - yum update -y
-      - yum install -y java-17-amazon-corretto wget unzip jq
-      #Set Java 17 as the default Java version
-      - export JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto
-      - export PATH=$JAVA_HOME/bin:$PATH
-      #Verify Java version
-      - java -version
-      #Install SonarScanner
+      #Install for sonar-scanner
+      - apt-get update && apt-get install -y openjdk-17-jdk wget unzip curl jq
+      - echo "Installing dependencies for SonarScanner..."
       - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
       - unzip sonar-scanner-cli-4.6.2.2472-linux.zip
-      #Remove the bundled JRE from SonarScanner to ensure it uses system Java
-      - rm -rf sonar-scanner-4.6.2.2472-linux/jre
-      #Add SonarScanner to PATH
+      - rm sonar-scanner-cli-4.6.2.2472-linux.zip
       - export PATH=$PATH:$(pwd)/sonar-scanner-4.6.2.2472-linux/bin
+      - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+      - export PATH=$JAVA_HOME/bin:$PATH
       
   pre_build:
     commands:
@@ -48,33 +42,12 @@ phases:
   post_build:
     commands:
       - echo "Starting post-build phase..."
-    
-      #Set JAVA_HOME and PATH explicitly
-      - export JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto
-      - export PATH=$JAVA_HOME/bin:$PATH:$(pwd)/sonar-scanner-4.6.2.2472-linux/bin
-  
-      #Print out the environment to confirm Java is in the path
-      - echo "JAVA_HOME is set to $JAVA_HOME"
-      - java -version
-  
-      #Set the Java executable directly in SonarScanner environment
-      - export SONAR_SCANNER_OPTS="-Djava.home=$JAVA_HOME"
-  
-      #Check if SonarScanner is available in the PATH
-      - sonar-scanner -h || echo "SonarScanner command not found in PATH"
-  
-      #Run SonarScanner with updated environment
       - sonar-scanner -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.organization=$SONAR_ORGANIZATION -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_LOGIN
-  
-      #Verify SonarCloud quality gate status
       - sleep 5
       - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=$SONAR_PROJECT_KEY > result.json
       - cat result.json
-      - if [ $(jq -r '.projectStatus.status' result.json) = "ERROR" ]; then
-          echo "SonarCloud Quality Gate failed!";
-          exit 2;
-        fi
-      - echo "SonarCloud analysis completed successfully."
+      - if [ $(jq -r '.projectStatus.status' result.json) = ERROR ]; then exit 1; fi
+      - echo "SonarCloud analysis completed."
 
 artifacts:
   files:
