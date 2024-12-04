@@ -18,7 +18,7 @@ phases:
       - pip install pylint
       #Update and install Java, wget, and unzip
       - yum update -y
-      - yum install -y java-17-amazon-corretto wget unzip
+      - yum install -y java-17-amazon-corretto wget unzip jq
       #Set Java 17 as the default Java version
       - export JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto
       - export PATH=$JAVA_HOME/bin:$PATH
@@ -48,7 +48,10 @@ phases:
   post_build:
     commands:
       - echo "Starting post-build phase..."
-      #Run SonarScanner using Java 17
+      #Re-export JAVA_HOME and PATH
+      - export JAVA_HOME=/usr/lib/jvm/java-17-amazon-corretto
+      - export PATH=$JAVA_HOME/bin:$PATH:$(pwd)/sonar-scanner-4.6.2.2472-linux/bin
+      #Run SonarScanner
       - sonar-scanner -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.organization=$SONAR_ORGANIZATION -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_LOGIN
       #Verify SonarCloud quality gate status
       - sleep 5
