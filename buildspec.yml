@@ -10,6 +10,7 @@ phases:
     commands:
       - echo "Starting pre-build phase..."
       - python --version
+      - pylint $CODEBUILD_SRC_DIR/*.py
   build:
     commands:
       - echo "Starting build phase..."
