@@ -30,8 +30,9 @@ phases:
       - echo "Running pylint on all python files of the project"
       - pylint $CODEBUILD_SRC_DIR/*.py
       - pylint $CODEBUILD_SRC_DIR/**/*.py
-      - which sonar-scanner  #Check if sonar-scanner is available
-      - sonar-scanner -v  #Verify the sonar-scanner version to confirm installation
+      - java -version  #Check if Java 17 is being used
+      - which sonar-scanner  #Verify sonar-scanner installation
+      - sonar-scanner -v  #Confirm sonar-scanner version
       
   build:
     commands:
@@ -39,8 +40,9 @@ phases:
       - python manage.py collectstatic --noinput
       - python manage.py migrate
       #for sonar analysis
-      - echo "Running SonarCloud analysis..."
-      - export JAVA_HOME=/usr/lib/jvm/java-17  #Set JAVA_HOME to Java 17 explicitly
+      - export JAVA_HOME=/usr/lib/jvm/java-17
+      - export PATH=$JAVA_HOME/bin:$PATH
+      - java -version  # Verify Java version again before sonar-scanner
       - sonar-scanner -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.organization=$SONAR_ORGANIZATION -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN
 
   post_build:
