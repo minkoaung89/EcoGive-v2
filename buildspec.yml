@@ -1,4 +1,8 @@
 version: 0.2
+environment:
+  image: "aws/codebuild/standard:6.0"  # Ubuntu 22.04 with better Java support
+  compute_type: "BUILD_GENERAL1_MEDIUM"
+
 env:
   secrets-manager:
     SONAR_LOGIN: prod/x23340355/EcoGive:sonartoken
@@ -19,9 +23,10 @@ phases:
       - pip install pylint
       #Install for sonar-scanner
       - echo "Downloading SonarScanner..."
-      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.3.0.1492-linux.zip
-      - unzip ./sonar-scanner-cli-3.3.0.1492-linux.zip
-      - export PATH=$PATH:$(pwd)/sonar-scanner-3.3.0.1492-linux/bin
+      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
+      - unzip sonar-scanner-cli-4.6.2.2472-linux.zip
+      - rm sonar-scanner-cli-4.6.2.2472-linux.zip
+      - export PATH=$PATH:$(pwd)/sonar-scanner-4.6.2.2472-linux/bin
       
   pre_build:
     commands:
@@ -40,9 +45,9 @@ phases:
       - python manage.py collectstatic --noinput
       - python manage.py migrate
       #for sonar analysis
-      - export JAVA_HOME=/usr/lib/jvm/java-17
-      - export PATH=$JAVA_HOME/bin:$PATH
-      - java -version  # Verify Java version again before sonar-scanner
+      #- export JAVA_HOME=/usr/lib/jvm/java-17
+      #- export PATH=$JAVA_HOME/bin:$PATH
+      #- java -version  # Verify Java version again before sonar-scanner
       - sonar-scanner -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.organization=$SONAR_ORGANIZATION -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN
 
   post_build:
