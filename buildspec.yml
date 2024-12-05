@@ -39,10 +39,10 @@ phases:
   build:
     commands:
       - echo "Starting build phase..."
-      - echo SONAR_PROJECT_KEY is: "$SONAR_PROJECT_KEY"
-      - echo SONAR_ORGANIZATION is: "$SONAR_ORGANIZATION"
-      - echo SONAR_HOST_URL is: "$SONAR_HOST_URL"
-      - echo SONAR_LOGIN is: "$SONAR_LOGIN"
+      - echo $SONAR_PROJECT_KEY
+      - echo $SONAR_ORGANIZATION
+      - echo $SONAR_HOST_URL
+      - echo $SONAR_LOGIN
       - echo "Starting build phase..."
       - python manage.py collectstatic --noinput
       - python manage.py migrate
