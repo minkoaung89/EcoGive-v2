@@ -46,8 +46,8 @@ phases:
       - echo "Starting build phase..."
       - echo "Running tests..."
       # Change to the correct directory where pom.xml is located
-      - ls /codebuild/output/src
-      - cd /codebuild/output/src/*/src || exit 1
+      - ls $CODEBUILD_SRC_DIR
+      - cd $CODEBUILD_SRC_DIR  # Move into the project directory
       - mvn test
       - echo "Running Sonar analysis..."
       - mvn sonar:sonar -Dsonar.login=$LOGIN -Dsonar.host.url=$HOST -Dsonar.projectKey=$Project -Dsonar.organization=$Organization
