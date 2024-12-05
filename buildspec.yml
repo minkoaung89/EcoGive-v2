@@ -10,7 +10,7 @@ phases:
   install:
     runtime-versions:
       python: 3.9
-      java: corretto17  # Use Java 17 (Corretto)
+      #java: corretto17  # Use Java 17 (Corretto)
     commands:
       - echo "Starting installation phase..."
       - pip install --upgrade pip
@@ -19,13 +19,9 @@ phases:
       - pip install pylint
       #Install for sonar-scanner
       - echo "Downloading SonarScanner..."
-      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
-      - unzip sonar-scanner-cli-4.6.2.2472-linux.zip
-      - rm sonar-scanner-cli-4.6.2.2472-linux.zip
-      - export PATH=$PATH:$(pwd)/sonar-scanner-4.6.2.2472-linux/bin
-      - export JAVA_HOME=/usr/lib/jvm/java-17  # Explicitly set JAVA_HOME to Java 17
-      - export PATH=$JAVA_HOME/bin:$PATH  # Update PATH to include Java 17 bin directory
-      - ls $(pwd)/sonar-scanner-4.6.2.2472-linux/bin  # Verify that sonar-scanner exists
+      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.3.0.1492-linux.zip
+      - unzip ./sonar-scanner-cli-3.3.0.1492-linux.zip
+      - export PATH=$PATH:/sonar-scanner-3.3.0.1492-linux/bin/
       
   pre_build:
     commands:
