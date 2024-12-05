@@ -21,8 +21,8 @@ from .models import Item
 from .forms import RegistrationForm
 
 #For User Registration
-@csrf_protect #fix after sonar-scan 
-@require_http_methods(["POST"]) #fix after sonar-scan 
+@csrf_protect #fix after sonar-scan
+@require_http_methods(["POST"]) #fix after sonar-scan
 def register(request):
     """
     This is user registeration function with validation for all inputs. 
@@ -59,8 +59,8 @@ def register(request):
     return render(request, 'register.html', {'form': form})
 
 #For User login
-@csrf_protect #fix after sonar-scan 
-@require_http_methods(["POST"]) #fix after sonar-scan 
+@csrf_protect #fix after sonar-scan
+@require_http_methods(["POST"]) #fix after sonar-scan
 def user_login(request):
     """
     This is user login function and will redirect to user dashboard after successful login.
@@ -78,8 +78,8 @@ def user_login(request):
     return render(request, 'login.html')
 
 #For User logout
-@csrf_protect #fix after sonar-scan 
-@require_http_methods(["POST"]) #fix after sonar-scan 
+@csrf_protect #fix after sonar-scan
+@require_http_methods(["POST"]) #fix after sonar-scan
 def user_logout(request):
     """
     This is user logout function.
@@ -88,8 +88,8 @@ def user_logout(request):
     return redirect('login')
 
 @login_required  #User needs to login first to add a new item
-@csrf_protect #fix after sonar-scan 
-@require_http_methods(["POST"]) #fix after sonar-scan 
+@csrf_protect #fix after sonar-scan
+@require_http_methods(["POST"]) #fix after sonar-scan
 def add_item(request):
     """
     This is add item function after user login, to start listing items.
@@ -135,8 +135,8 @@ def add_item(request):
 
 #For Editing an Item
 @login_required #Only authenticated users to edit their existing item
-@csrf_protect #fix after sonar-scan 
-@require_http_methods(["POST"]) #fix after sonar-scan 
+@csrf_protect #fix after sonar-scan
+@require_http_methods(["POST"]) #fix after sonar-scan
 def edit_item(request, item_id):
     """
     This is edit function of listed item.
@@ -165,8 +165,8 @@ def edit_item(request, item_id):
 
 #For Deleting an Item
 @login_required
-@csrf_protect #fix after sonar-scan 
-@require_http_methods(["POST"]) #fix after sonar-scan 
+@csrf_protect #fix after sonar-scan
+@require_http_methods(["POST"]) #fix after sonar-scan
 def delete_item(request, item_id):
     """
     This is delete function when owner delete the item.
@@ -183,8 +183,8 @@ def delete_item(request, item_id):
     return render(request, 'delete_item.html', {'item': item})
 
 #For item inquiry
-@csrf_protect #fix after sonar-scan 
-@require_http_methods(["POST"]) #fix after sonar-scan 
+@csrf_protect #fix after sonar-scan
+@require_http_methods(["POST"]) #fix after sonar-scan
 def inquire_item(request, item_id):
     """
     This is for inquiry function while user wants to ask something to item owner
@@ -237,7 +237,7 @@ def inquire_item(request, item_id):
     return render(request, 'inquire_item.html', {'item': item})
 
 #For home page view
-@csrf_protect #fix after sonar-scan 
+@csrf_protect #fix after sonar-scan
 def home(request):
     """
     This is home page view with search query function for filtered view
@@ -251,7 +251,7 @@ def home(request):
     return render(request, 'home.html', {'items': items})
 
 #For item list view
-@csrf_protect #fix after sonar-scan 
+@csrf_protect #fix after sonar-scan
 def item_list(request):
     """
     Check if query parameter "all=true" is set to show all items and 
@@ -269,7 +269,7 @@ def item_list(request):
 
 
 #Dashboard for registered users
-@csrf_protect #fix after sonar-scan 
+@csrf_protect #fix after sonar-scan
 @login_required
 def dashboard(request):
     """
