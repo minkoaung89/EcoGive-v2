@@ -1,16 +1,16 @@
 version: 0.2
-#env:
-#  secrets-manager:
-#    SONAR_LOGIN: prod/x23340355/EcoGive:sonartoken
-#    SONAR_HOST_URL: prod/x23340355/EcoGive:HOST
-#    SONAR_ORGANIZATION: prod/x23340355/EcoGive:Organization
-#    SONAR_PROJECT_KEY: prod/x23340355/EcoGive:Project
 env:
-  variables:
-    SONAR_PROJECT_KEY: "minkoaung89_EcoGive-v2"
-    SONAR_ORGANIZATION: "x23340355"
-    SONAR_HOST_URL: "https://sonarcloud.io"
-    SONAR_LOGIN: "9661fc86c9246302065b48c23439a04208e5381c"
+  secrets-manager:
+    SONAR_LOGIN: prod/x23340355/EcoGive:sonartoken
+    SONAR_HOST_URL: prod/x23340355/EcoGive:HOST
+    SONAR_ORGANIZATION: prod/x23340355/EcoGive:Organization
+    SONAR_PROJECT_KEY: prod/x23340355/EcoGive:Project
+#env:
+#  variables:
+#    SONAR_PROJECT_KEY: "minkoaung89_EcoGive-v2"
+#    SONAR_ORGANIZATION: "x23340355"
+#    SONAR_HOST_URL: "https://sonarcloud.io"
+#    SONAR_LOGIN: "9661fc86c9246302065b48c23439a04208e5381c"
     
 phases:
   install:
