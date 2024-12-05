@@ -31,7 +31,7 @@ phases:
       - python --version
       - echo "Running pylint on all python files of the project"
       - pylint $CODEBUILD_SRC_DIR/*.py
-      - pylint $CODEBUILD_SRC_DIR/**/*.py
+      - pylint $CODEBUILD_SRC_DIR/**/*.py #it will analyse all python files in subdirectories of entire project directory
       - java -version  #Check if Java 17 is being used
       - which sonar-scanner  #Verify sonar-scanner installation
       - sonar-scanner -v  #Confirm sonar-scanner version
