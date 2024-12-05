@@ -160,10 +160,13 @@
         } else {
             s = s.replace(/[^-\w\s]/g, ''); // remove unneeded chars
         }
-        s = s.replace(/^\s+|\s+$/g, ''); // trim leading/trailing spaces
+        //s = s.replace(/^\s+|\s+$/g, ''); // trim leading/trailing spaces
+        s = s.replace(/^\s+|\s+$/g, ''); // trim leading/trailing spaces, fixed after sonar scan
         s = s.replace(/[-\s]+/g, '-'); // convert spaces to hyphens
         s = s.substring(0, num_chars); // trim to first num_chars chars
-        return s.replace(/-+$/g, ''); // trim any trailing hyphens
+        //return s.replace(/-+$/g, ''); // trim any trailing hyphens
+        return s.replace(/-+$/, ''); // trim any trailing hyphens, fixed after sonar scan
+
     }
     window.URLify = URLify;
 }
