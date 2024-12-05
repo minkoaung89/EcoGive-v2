@@ -46,8 +46,8 @@ phases:
       - echo "Starting build phase..."
       - echo "Running tests..."
       # Change to the correct directory where pom.xml is located
-      - ls /codebuild/output/src3238548611/src
-      - cd /codebuild/output/src3238548611/src/my-maven-project
+      - ls /codebuild/output/src
+      - cd /codebuild/output/src/*/src || exit 1
       - mvn test
       - echo "Running Sonar analysis..."
       - mvn sonar:sonar -Dsonar.login=$LOGIN -Dsonar.host.url=$HOST -Dsonar.projectKey=$Project -Dsonar.organization=$Organization
