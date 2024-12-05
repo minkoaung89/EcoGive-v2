@@ -17,12 +17,7 @@ phases:
       #Install dependencies needed for running the static analysis
       - pip install pylint
       #Install for sonar-scanner
-    runtime-versions:
-      java: openjdk11
-    commands:
-      - echo "Starting install phase..."
-      - apt-get update
-      - apt-get install -y jq
+      - echo "Downloading SonarScanner..."
       - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
       - unzip sonar-scanner-cli-4.6.2.2472-linux.zip
       - rm sonar-scanner-cli-4.6.2.2472-linux.zip
@@ -43,19 +38,12 @@ phases:
       - python manage.py collectstatic --noinput
       - python manage.py migrate
       #for sonar analysis
-      - echo "Starting build phase..."
-      - echo "Running tests..."
-      # Change to the correct directory where pom.xml is located
-      - ls $CODEBUILD_SRC_DIR
-      - cd $CODEBUILD_SRC_DIR  # Move into the project directory
-      - mvn test
-      - echo "Running Sonar analysis..."
-      - mvn sonar:sonar -Dsonar.login=$LOGIN -Dsonar.host.url=$HOST -Dsonar.projectKey=$Project -Dsonar.organization=$Organization
-      - echo "Sleeping for 5 seconds to allow analysis to complete..."
-      - sleep 5
-      - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=$Project > result.json
-      - cat result.json
-      - if [ $(jq -r '.projectStatus.status' result.json) = ERROR ]; then exit 1; fi
+      - echo "Running SonarCloud analysis..."
+      - sonar-scanner \
+          -Dsonar.projectKey=$SONAR_PROJECT_KEY \
+          -Dsonar.organization=$SONAR_ORGANIZATION \
+          -Dsonar.host.url=$SONAR_HOST_URL \
+          -Dsonar.login=$SONAR_TOKEN
 
   post_build:
     commands:
