@@ -23,6 +23,7 @@ phases:
       - unzip sonar-scanner-cli-4.6.2.2472-linux.zip
       - rm sonar-scanner-cli-4.6.2.2472-linux.zip
       - export PATH=$PATH:$(pwd)/sonar-scanner-4.6.2.2472-linux/bin
+      - export JAVA_HOME=/usr/lib/jvm/java-17  # Explicitly set JAVA_HOME to Java 17
       
   pre_build:
     commands:
