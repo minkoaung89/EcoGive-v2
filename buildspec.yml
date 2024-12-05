@@ -1,8 +1,4 @@
 version: 0.2
-environment:
-  image: "aws/codebuild/standard:6.0"  # Ubuntu 22.04 with better Java support
-  compute_type: "BUILD_GENERAL1_MEDIUM"
-
 env:
   secrets-manager:
     SONAR_LOGIN: prod/x23340355/EcoGive:sonartoken
@@ -14,7 +10,7 @@ phases:
   install:
     runtime-versions:
       python: 3.9
-      java: corretto17  # Use Java 17 (Corretto)
+     # java: corretto17  # Use Java 17 (Corretto)
     commands:
       - echo "Starting installation phase..."
       - pip install --upgrade pip
@@ -45,9 +41,9 @@ phases:
       - python manage.py collectstatic --noinput
       - python manage.py migrate
       #for sonar analysis
-      - export JAVA_HOME=/usr/lib/jvm/java-17
-      - export PATH=$JAVA_HOME/bin:$PATH
-      - java -version  # Verify Java version again before sonar-scanner
+      #- export JAVA_HOME=/usr/lib/jvm/java-17
+      #- export PATH=$JAVA_HOME/bin:$PATH
+      #- java -version  # Verify Java version again before sonar-scanner
       - sonar-scanner -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.organization=$SONAR_ORGANIZATION -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN
 
   post_build:
