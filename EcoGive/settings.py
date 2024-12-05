@@ -162,8 +162,8 @@ EMAIL_HOST = 'in-v3.mailjet.com'  # Mailjet SMTP server
 EMAIL_PORT = 587  # Mailjet SMTP port
 EMAIL_USE_TLS = True
 
-#For AWS S3 Integration
-AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
+#For AWS S3 Integration, please ensure S3 bucket name created in S3
+AWS_STORAGE_BUCKET_NAME = "x23340355-ecogive"
 AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
 AWS_DEFAULT_ACL = None
 AWS_LOCATION = 'media'

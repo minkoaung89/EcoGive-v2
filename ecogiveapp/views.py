@@ -22,7 +22,7 @@ from .forms import RegistrationForm
 
 #For User Registration
 @csrf_protect #fix after sonar-scan
-@require_http_methods(["POST"]) #fix after sonar-scan
+@require_http_methods(["GET", "POST"]) #fix after sonar-scan
 def register(request):
     """
     This is user registeration function with validation for all inputs. 
@@ -60,7 +60,7 @@ def register(request):
 
 #For User login
 @csrf_protect #fix after sonar-scan
-@require_http_methods(["POST"]) #fix after sonar-scan
+@require_http_methods(["GET", "POST"]) #fix after sonar-scan
 def user_login(request):
     """
     This is user login function and will redirect to user dashboard after successful login.
@@ -79,7 +79,7 @@ def user_login(request):
 
 #For User logout
 @csrf_protect #fix after sonar-scan
-@require_http_methods(["POST"]) #fix after sonar-scan
+@require_http_methods(["GET", "POST"]) #fix after sonar-scan
 def user_logout(request):
     """
     This is user logout function.
@@ -87,9 +87,10 @@ def user_logout(request):
     logout(request)
     return redirect('login')
 
+#For new item addition
 @login_required  #User needs to login first to add a new item
 @csrf_protect #fix after sonar-scan
-@require_http_methods(["POST"]) #fix after sonar-scan
+@require_http_methods(["GET", "POST"]) #fix after sonar-scan
 def add_item(request):
     """
     This is add item function after user login, to start listing items.
@@ -136,7 +137,7 @@ def add_item(request):
 #For Editing an Item
 @login_required #Only authenticated users to edit their existing item
 @csrf_protect #fix after sonar-scan
-@require_http_methods(["POST"]) #fix after sonar-scan
+@require_http_methods(["GET", "POST"]) #fix after sonar-scan
 def edit_item(request, item_id):
     """
     This is edit function of listed item.
@@ -166,7 +167,7 @@ def edit_item(request, item_id):
 #For Deleting an Item
 @login_required
 @csrf_protect #fix after sonar-scan
-@require_http_methods(["POST"]) #fix after sonar-scan
+@require_http_methods(["GET", "POST"]) #fix after sonar-scan
 def delete_item(request, item_id):
     """
     This is delete function when owner delete the item.
@@ -184,7 +185,7 @@ def delete_item(request, item_id):
 
 #For item inquiry
 @csrf_protect #fix after sonar-scan
-@require_http_methods(["POST"]) #fix after sonar-scan
+@require_http_methods(["GET", "POST"]) #fix after sonar-scan
 def inquire_item(request, item_id):
     """
     This is for inquiry function while user wants to ask something to item owner
