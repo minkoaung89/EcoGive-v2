@@ -21,7 +21,7 @@ phases:
       - echo "Downloading SonarScanner..."
       - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.3.0.1492-linux.zip
       - unzip ./sonar-scanner-cli-3.3.0.1492-linux.zip
-      - export PATH=$PATH:/sonar-scanner-3.3.0.1492-linux/bin/
+      - export PATH=$PATH:$(pwd)/sonar-scanner-3.3.0.1492-linux/bin
       
   pre_build:
     commands:
@@ -30,6 +30,8 @@ phases:
       - echo "Running pylint on all python files of the project"
       - pylint $CODEBUILD_SRC_DIR/*.py
       - pylint $CODEBUILD_SRC_DIR/**/*.py
+      - which sonar-scanner  #Check if sonar-scanner is available
+      - sonar-scanner -v  #Verify the sonar-scanner version to confirm installation
       
   build:
     commands:
