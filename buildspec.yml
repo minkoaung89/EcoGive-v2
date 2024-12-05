@@ -22,8 +22,10 @@ phases:
       - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
       - unzip sonar-scanner-cli-4.6.2.2472-linux.zip
       - rm sonar-scanner-cli-4.6.2.2472-linux.zip
+      - export PATH=$PATH:$(pwd)/sonar-scanner-4.6.2.2472-linux/bin
       - export JAVA_HOME=/usr/lib/jvm/java-17  # Explicitly set JAVA_HOME to Java 17
       - export PATH=$JAVA_HOME/bin:$PATH  # Update PATH to include Java 17 bin directory
+      - ls $(pwd)/sonar-scanner-4.6.2.2472-linux/bin  # Verify that sonar-scanner exists
       
   pre_build:
     commands:
@@ -32,7 +34,6 @@ phases:
       - echo "Running pylint on all python files of the project"
       - pylint $CODEBUILD_SRC_DIR/*.py
       - pylint $CODEBUILD_SRC_DIR/**/*.py
-      - java -version
       
   build:
     commands:
