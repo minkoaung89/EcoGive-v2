@@ -17,14 +17,16 @@ phases:
       #Install dependencies needed for running the static analysis
       - pip install pylint
       #Install for sonar-scanner
-      - apt-get update && apt-get install -y openjdk-17-jdk wget unzip curl jq
-      - echo "Installing dependencies for SonarScanner..."
+    runtime-versions:
+      java: openjdk11
+    commands:
+      - echo "Starting install phase..."
+      - apt-get update
+      - apt-get install -y jq
       - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.6.2.2472-linux.zip
       - unzip sonar-scanner-cli-4.6.2.2472-linux.zip
       - rm sonar-scanner-cli-4.6.2.2472-linux.zip
       - export PATH=$PATH:$(pwd)/sonar-scanner-4.6.2.2472-linux/bin
-      - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-      - export PATH=$JAVA_HOME/bin:$PATH
       
   pre_build:
     commands:
@@ -33,21 +35,27 @@ phases:
       - echo "Running pylint on all python files of the project"
       - pylint $CODEBUILD_SRC_DIR/*.py
       - pylint $CODEBUILD_SRC_DIR/**/*.py
+      - java -version
       
   build:
     commands:
       - echo "Starting build phase..."
       - python manage.py collectstatic --noinput
       - python manage.py migrate
-  post_build:
-    commands:
-      - echo "Starting post-build phase..."
-      - sonar-scanner -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.organization=$SONAR_ORGANIZATION -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_LOGIN
+      #for sonar analysis
+      - echo "Running tests..."
+      - mvn test
+      - echo "Running Sonar analysis..."
+      - mvn sonar:sonar -Dsonar.login=$LOGIN -Dsonar.host.url=$HOST -Dsonar.projectKey=$Project -Dsonar.organization=$Organization
+      - echo "Sleeping for 5 seconds to allow analysis to complete..."
       - sleep 5
-      - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=$SONAR_PROJECT_KEY > result.json
+      - curl https://sonarcloud.io/api/qualitygates/project_status?projectKey=$Project > result.json
       - cat result.json
       - if [ $(jq -r '.projectStatus.status' result.json) = ERROR ]; then exit 1; fi
-      - echo "SonarCloud analysis completed."
+
+  post_build:
+    commands:
+      - echo "Post-build phase completed."
 
 artifacts:
   files:
