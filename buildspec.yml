@@ -39,11 +39,8 @@ phases:
       - python manage.py migrate
       #for sonar analysis
       - echo "Running SonarCloud analysis..."
-      - sonar-scanner \
-          -Dsonar.projectKey=$SONAR_PROJECT_KEY \
-          -Dsonar.organization=$SONAR_ORGANIZATION \
-          -Dsonar.host.url=$SONAR_HOST_URL \
-          -Dsonar.login=$SONAR_TOKEN
+      - echo "Running SonarCloud analysis..."
+      - sonar-scanner -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.organization=$SONAR_ORGANIZATION -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN
 
   post_build:
     commands:
