@@ -1,10 +1,16 @@
 version: 0.2
+#env:
+#  secrets-manager:
+#    SONAR_LOGIN: prod/x23340355/EcoGive:sonartoken
+#    SONAR_HOST_URL: prod/x23340355/EcoGive:HOST
+#    SONAR_ORGANIZATION: prod/x23340355/EcoGive:Organization
+#    SONAR_PROJECT_KEY: prod/x23340355/EcoGive:Project
 env:
-  secrets-manager:
-    SONAR_LOGIN: prod/x23340355/EcoGive:sonartoken
-    SONAR_HOST_URL: prod/x23340355/EcoGive:HOST
-    SONAR_ORGANIZATION: prod/x23340355/EcoGive:Organization
-    SONAR_PROJECT_KEY: prod/x23340355/EcoGive:Project
+  variables:
+    SONAR_PROJECT_KEY: "minkoaung89_EcoGive-v2"
+    SONAR_ORGANIZATION: "x23340355"
+    SONAR_HOST_URL: "https://sonarcloud.io"
+    SONAR_LOGIN: "9661fc86c9246302065b48c23439a04208e5381c"
     
 phases:
   install:
@@ -38,11 +44,6 @@ phases:
       
   build:
     commands:
-      - echo "Starting build phase..."
-      - echo $SONAR_PROJECT_KEY
-      - echo $SONAR_ORGANIZATION
-      - echo $SONAR_HOST_URL
-      - echo $SONAR_LOGIN
       - echo "Starting build phase..."
       - python manage.py collectstatic --noinput
       - python manage.py migrate
