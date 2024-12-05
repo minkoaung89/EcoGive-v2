@@ -279,7 +279,7 @@ def dashboard(request):
     return render(request, 'dashboard.html', {'items': user_items})
 
 #View Item Detail Displays for an individual item
-@csrf_protect #fix after sonar-scan 
+@csrf_protect #fix after sonar-scan
 def view_item_detail(request, item_id):
     """
     Display detailed information for a specific item.
