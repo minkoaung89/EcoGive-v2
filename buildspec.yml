@@ -10,6 +10,7 @@ phases:
   install:
     runtime-versions:
       python: 3.9
+      java: corretto17  # Use Java 17 (Corretto)
     commands:
       - echo "Starting installation phase..."
       - pip install --upgrade pip
