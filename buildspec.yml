@@ -42,12 +42,12 @@ phases:
       - python manage.py collectstatic --noinput
       - python manage.py migrate
       #for sonar analysis
+      - java -version
+      - echo "Running SonarCloud analysis..."
       - echo "SONAR_PROJECT_KEY is: $SONAR_PROJECT_KEY"
       - echo "SONAR_ORGANIZATION is: $SONAR_ORGANIZATION"
       - echo "SONAR_HOST_URL is: $SONAR_HOST_URL"
       - echo "SONAR_TOKEN is: $SONAR_TOKEN"
-      - java -version
-      - echo "Running SonarCloud analysis..."
       - sonar-scanner -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.organization=$SONAR_ORGANIZATION -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN -X
 
   post_build:
