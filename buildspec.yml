@@ -19,9 +19,11 @@ phases:
       - pip install pylint
       #Install for sonar-scanner
       - echo "Downloading SonarScanner..."
-      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
-      - unzip sonar-scanner-cli-4.8.0.2856-linux.zip
-      - export PATH=$PATH:$(pwd)/sonar-scanner-4.8.0.2856-linux/bin
+      - wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-5.0.1.3006-linux.zip
+      - unzip sonar-scanner-cli-5.0.1.3006-linux.zip
+      - export PATH=$PATH:$(pwd)/sonar-scanner-5.0.1.3006-linux/bin
+      - export JAVA_HOME=/usr/lib/jvm/java-17
+      - export PATH=$JAVA_HOME/bin:$PATH
       
   pre_build:
     commands:
@@ -40,9 +42,6 @@ phases:
       - python manage.py collectstatic --noinput
       - python manage.py migrate
       #for sonar analysis
-      - export JAVA_HOME=/usr/lib/jvm/java-17
-      - export PATH=$JAVA_HOME/bin:$PATH
-      - echo "Verifying Java version again before running SonarScanner..."
       - java -version
       - echo "Running SonarCloud analysis..."
       - sonar-scanner -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.organization=$SONAR_ORGANIZATION -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_TOKEN
