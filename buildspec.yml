@@ -47,10 +47,11 @@ phases:
       #for pytest automated testing
       - echo Running tests with pytest...
       - pytest --maxfail=5 --disable-warnings
-      
+      - echo "Running tests with coverage..."
+      - pytest --cov=ecogiveapp --cov-report=xml --junitxml=pytest-results.xml
       #for sonar analysis
       - java -version
-      - sonar-scanner -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.organization=$SONAR_ORGANIZATION -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_LOGIN
+      - sonar-scanner -Dsonar.projectKey=$SONAR_PROJECT_KEY -Dsonar.organization=$SONAR_ORGANIZATION -Dsonar.host.url=$SONAR_HOST_URL -Dsonar.login=$SONAR_LOGIN -Dsonar.python.coverage.reportPaths=coverage.xml
 
   post_build:
     commands:
