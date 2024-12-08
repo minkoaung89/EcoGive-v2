@@ -5,6 +5,8 @@ env:
     SONAR_HOST_URL: prod/x23340355/EcoGive:HOST
     SONAR_ORGANIZATION: prod/x23340355/EcoGive:Organization
     SONAR_PROJECT_KEY: prod/x23340355/EcoGive:Project
+  variables:
+    AWS_STORAGE_BUCKET_NAME: "x23340355-ecogive"
 
 phases:
   install:
