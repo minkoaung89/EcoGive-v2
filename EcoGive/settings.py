@@ -22,16 +22,20 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-7%k)n24ayo%q-+wk4*w+a*lgf+jja8hm-qp=y+-%fz##d-51_e'
+#SECRET_KEY = 'django-insecure-7%k)n24ayo%q-+wk4*w+a*lgf+jja8hm-qp=y+-%fz##d-51_e'
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'fallback-secret-for-local-use-only')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 #DEBUG = True   #fixed after sonar scan
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = [
+    '03983bc206b641b5ac3b573540fa48ce.vfs.cloud9.eu-west-1.amazonaws.com',
+    'x23340355-ecogive-env1.eba-22ncq22p.eu-west-1.elasticbeanstalk.com'
+    ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://03983bc206b641b5ac3b573540fa48ce.vfs.cloud9.eu-west-1.amazonaws.com',
-    'http://x23340355-ecogive-env1.eba-22ncq22p.eu-west-1.elasticbeanstalk.com/'
+    'http://03983bc206b641b5ac3b573540fa48ce.vfs.cloud9.eu-west-1.amazonaws.com',
+    'http://x23340355-ecogive-env1.eba-22ncq22p.eu-west-1.elasticbeanstalk.com'
 ]
 
 # Application definition
