@@ -46,7 +46,7 @@ phases:
       
       #for pytest automated testing
       - echo Running tests with pytest...
-      - pytest --maxfail=5 --disable-warnings --junitxml=pytest-results.xml  #Run tests and generate a report
+      - pytest --maxfail=5 --disable-warnings
       
       #for sonar analysis
       - java -version
@@ -59,9 +59,3 @@ phases:
 artifacts:
   files:
     - '**/*'
-
-reports:
-  pytest_reports:
-    files:
-      - pytest-results.xml
-    file-format: JUNITXML
