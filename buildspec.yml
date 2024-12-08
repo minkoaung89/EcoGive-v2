@@ -41,10 +41,10 @@ phases:
   build:
     commands:
       - echo "Starting build phase..."
-      - python manage.py collectstatic --noinput
-      - python manage.py migrate
+      - python manage.py collectstatic --noinput  #Collect static files
+      - python manage.py migrate  #Apply database migrations to ensures database set up is correct
       
-      #for pytest code testing
+      #for pytest automated testing
       - echo Running tests with pytest...
       - pytest --maxfail=5 --disable-warnings --junitxml=pytest-results.xml  #Run tests and generate a report
       
@@ -59,3 +59,9 @@ phases:
 artifacts:
   files:
     - '**/*'
+
+reports:
+  pytest_reports:
+    files:
+      - pytest-results.xml
+    file-format: JUNITXML
