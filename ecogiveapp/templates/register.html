@@ -107,10 +107,10 @@
                 // Confirm Password validation
                 if (password === confirmPassword && confirmPassword !== '') {
                     confirmPasswordInput.classList.remove('is-invalid');
-                    passwordError.style.display = 'none';//NOSONAR as this is not hardcoded password
+                    passwordError.style.display = 'none';//NOSONAR
                 } else {
                     confirmPasswordInput.classList.add('is-invalid');
-                    passwordError.style.display = 'block';//NOSONAR as this is not hardcoded password
+                    passwordError.style.display = 'block';//NOSONAR
                     isValid = false;
                 }
 
