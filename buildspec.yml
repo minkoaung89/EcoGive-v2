@@ -41,7 +41,7 @@ phases:
   build:
     commands:
       - echo "Starting build phase..."
-      - python manage.py collectstatic --noinput  #Collect static files
+      #- python manage.py collectstatic --noinput  #Collect static files
       - python manage.py migrate  #Apply database migrations to ensures database set up is correct
       
       #for pytest automated testing

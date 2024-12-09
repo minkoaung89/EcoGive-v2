@@ -22,7 +22,7 @@ from .forms import RegistrationForm
 
 #For User Registration
 @csrf_protect #fix after sonar-scan
-@require_http_methods(["GET", "POST"]) #fix after sonar-scan
+@require_http_methods(["GET", "POST"]) #GET is needed for form rendering, POST is for submission
 def register(request):
     """
     This is user registeration function with validation for all inputs. 
@@ -60,7 +60,7 @@ def register(request):
 
 #For User login
 @csrf_protect #fix after sonar-scan
-@require_http_methods(["GET", "POST"]) #fix after sonar-scan
+@require_http_methods(["GET", "POST"]) #GET is needed for form rendering, POST is for submission
 def user_login(request):
     """
     This is user login function and will redirect to user dashboard after successful login.
@@ -79,7 +79,7 @@ def user_login(request):
 
 #For User logout
 @csrf_protect #fix after sonar-scan
-@require_http_methods(["GET", "POST"]) #fix after sonar-scan
+@require_http_methods(["GET", "POST"]) #GET is needed for form rendering, POST is for submission
 def user_logout(request):
     """
     This is user logout function.
@@ -90,7 +90,7 @@ def user_logout(request):
 #For new item addition
 @login_required  #User needs to login first to add a new item
 @csrf_protect #fix after sonar-scan
-@require_http_methods(["GET", "POST"]) #fix after sonar-scan
+@require_http_methods(["GET", "POST"]) #GET is needed for form rendering, POST is for submission
 def add_item(request):
     """
     This is add item function after user login, to start listing items.
