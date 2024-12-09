@@ -33,8 +33,9 @@ ALLOWED_HOSTS = [
     ]
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://03983bc206b641b5ac3b573540fa48ce.vfs.cloud9.eu-west-1.amazonaws.com',
-    'http://x23340355-ecogive-env1.eba-22ncq22p.eu-west-1.elasticbeanstalk.com'
+    # As this is Dev environment of lab project,production system will use proper SSL cert
+    'http://03983bc206b641b5ac3b573540fa48ce.vfs.cloud9.eu-west-1.amazonaws.com',   #NOSONAR
+    'http://x23340355-ecogive-env1.eba-22ncq22p.eu-west-1.elasticbeanstalk.com'     #NOSONAR
 ]
 
 # Application definition
